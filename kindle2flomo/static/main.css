@@ -7,24 +7,12 @@
 
   .main {
     /* display:  none; */
-    max-width: 100%;
+    max-width: 900px;
   }
 
   .aside {
     max-width: 100% !important;
     width: 100% !important;
-  }
-
-  .weread {
-    display: block !important;
-  }
-
-  .main-content {
-    display: flex;
-    flex-wrap: nowrap !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    height: 100% !important;
   }
 
   .qrcode {
@@ -68,16 +56,12 @@ body {
 }
 
 .main {
-  max-width: 1600px;
+  max-width: 900px;
 }
 
 .right {
   min-width: 300px;
   margin-left: 1%
-}
-
-.weread {
-  display: none;
 }
 
 .help ul {

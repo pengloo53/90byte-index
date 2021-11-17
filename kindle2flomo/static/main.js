@@ -104,9 +104,11 @@ let app = new Vue({
                 "place": "位置 4242"
             }
         ],
+        notes_length: 100,
         selectedCount: 0,
         savedCount: 0,
         asideVisable: true,
+        wereadVisible: false,
         textarea: '',
         // placeholder: '一个神奇的输入框。\n解析 -> 贴入微信读书笔记并解析；\n新建 -> 插入笔记到列表；\n请求 -> 贴入微信读书 Cookies，获取所有笔记'
         placeholder: '1. 打开微信读书笔记，点击导出，复制到剪贴板\n2. 粘贴到此处\n3. 点击解析按钮'
