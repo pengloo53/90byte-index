@@ -1,0 +1,151 @@
+@media screen and (max-width: 500px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .main {
+    /* display:  none; */
+    max-width: 100%;
+  }
+
+  .aside {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .weread {
+    display: block !important;
+  }
+
+  .main-content {
+    display: flex;
+    flex-wrap: nowrap !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    height: 100% !important;
+  }
+
+  .qrcode {
+    text-align: center;
+  }
+
+  .main .el-card {
+    width: 100% !important;
+  }
+
+  .op {
+    float: none !important;
+    line-height: 1em !important;
+  }
+
+  .el-upload {
+    width: 100% !important;
+  }
+
+  .el-upload-dragger {
+    width: 100% !important;
+  }
+}
+
+body {
+  font-family: 'DIN-Regular', 'PingFang SC', Helvetica, Arial, sans-serif;
+  background-color: #FAFAFA;
+  margin: 0;
+}
+
+
+.container {
+  display: flex;
+  justify-content: center;
+  padding: 0 5%;
+}
+
+.aside {
+  max-width: 280px;
+  margin-right: 1%;
+}
+
+.main {
+  max-width: 1600px;
+}
+
+.right {
+  min-width: 300px;
+  margin-left: 1%
+}
+
+.weread {
+  display: none;
+}
+
+.help ul {
+  margin-top: 20px;
+  padding: 0;
+}
+
+.main p {
+  line-height: 1.8;
+  margin: 0;
+  min-height: 20px;
+}
+
+.main .main-content {
+
+}
+
+.main .el-card {
+  margin-bottom: 2%;
+  font-size: 14px;
+  color: #606266;
+}
+
+.main .el-card .el-card__body {
+  padding: 10px 15px;
+}
+
+
+.highlight{
+  padding: 5px 15px;
+  background-color:#fafafa;
+  border-left: 3px solid #ddd;
+  margin: 5px 0;
+}
+
+.note{
+  margin-bottom: 5px;
+}
+
+.selected {
+  border: 1px solid #5783F7;
+}
+
+.saved {
+  border: 1px solid #67C23A;
+}
+
+.el-upload {
+  width: 280px;
+}
+
+
+.el-divider__text {
+  background-color: #FAFAFA;
+}
+
+.el-tag {
+  padding: 0 4px;
+  line-height: 24px;
+  height: 24px;
+}
+
+.el-upload-list__item-name [class^=el-icon] {
+  height: auto
+}
+
+.beian{
+  font-size: 0.9em;
+  text-align: center;
+  margin-bottom: 30px;
+}

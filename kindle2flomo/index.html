@@ -1,0 +1,199 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" href="./static/favicon.ico">
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <!-- iconfont -->
+  <link rel="stylesheet" href="https://at.alicdn.com/t/font_2701845_7hk2y21hi32.css">
+  <!-- main.css -->
+  <link rel="stylesheet" href="./static/main.css">
+  <title>Kindle to flomo</title>
+</head>
+
+<body>
+  <div id="app">
+    <div class="container">
+      <!-- aside -->
+      <div v-if="asideVisable" class="aside">
+        <h2 style="color: #606266" title="九零字节出品">Kindle2flomo</h2>
+        <!-- kindle note uploader -->
+        <el-upload class="upload-demo" action="#" :multiple="true" :file-list="fileList"
+          :http-request="handleRequest" :on-preview="preview" :on-change="uploadChange" :on-success="uploadSuccess"
+          :on-exceed="exceed" :limit="10000" accept=".csv, .html">
+          <el-button icon="el-icon-upload" size="medium" type="primary" style="width: 100%">上传 Kindle 笔记</el-button>
+          <div class="el-upload__tip" slot="tip">
+            <el-link type="info"
+              href="https://mp.weixin.qq.com/s?__biz=MjM5MDQ4NjUwMg==&mid=2649198191&idx=1&sn=95c506dde4a079d2840a91b12ca358a8&chksm=be5734e68920bdf04af5ad5f31d8c40acea17e723b1b0eeaa2d3d47d009a0adc5abca44bc953&token=1351484622&lang=zh_CN#rd"
+              target="_blank">不知道怎么获取 Kindle 笔记？</el-link>
+          </div>
+          <!-- <i class="el-icon-upload"></i>
+          <div class="el-upload__text">上传 Kindle 笔记，支持多选</div>
+           -->
+        </el-upload>
+        <!-- weread input -->
+        <div class="weread">
+          <el-divider><i class="iconfont icon-weixin" style="color: #909399; font-size: 14px;"> 微信读书</i></el-divider>
+          <el-input type="textarea" :rows="6" :placeholder="placeholder" v-model="textarea">
+          </el-input>
+          <el-button size="medium" icon="el-icon-s-order" type="success" @click="parseWereadNotes"
+            style="margin-top:10px;width: 100%">
+            解析</el-button>
+          <!-- <el-button size="mini" icon="el-icon-circle-plus" type="primary">新建</el-button> -->
+          <!-- <el-button size="mini" icon="el-icon-circle-plus" type="warning">请求</el-button> -->
+        </div>
+        <div class="form">
+          <el-divider><i class="el-icon-s-tools" style="color: #909399"> 解析设置</i></el-divider>
+          <el-form :model="form" :rules="rule" ref="form" label-position="top" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="标签（支持多个哦）" prop="tag">
+              <el-input v-model="form.tag" placeholder="开头 # 号，多个标签空格分隔" :clearable="true"></el-input>
+            </el-form-item>
+            <!-- <el-form-item label="分隔符（标注与笔记之间）" prop="delimiter">
+              <el-input v-model="form.delimiter" placeholder="默认空一行" :clearable="true"></el-input>
+            </el-form-item> -->
+            <el-form-item label="标签位置（默认下面）" prop="order">
+              <el-switch v-model="form.order" :content="form.order" active-value="up" inactive-value="down"
+                change="switchChange"></el-switch>
+            </el-form-item>
+          </el-form>
+        </div>
+        <!-- set up api -->
+        <div class="api">
+          <!-- <el-divider><i class="el-icon-s-opportunity" style="color: #909399"> 设置 API</i></el-divider> -->
+          <!-- <el-form-item> -->
+          <el-popover placement="bottom" title="" width="300" trigger="click" @hide="saveApi">
+            <el-input v-model="api" autocomplete="on" placeholder="https://flomoapp.com/iwh/xxxxxxxxx"></el-input>
+            <el-button style="width: 100%;margin-bottom: 5%" slot="reference" icon="el-icon-s-tools" type="danger"
+              size="medium">设置 API</el-button>
+          </el-popover>
+          <!-- </el-form-item> -->
+        </div>
+        <!-- aside: 帮助 -->
+        <div class="help">
+          <el-divider><i class="el-icon-s-opportunity" style="color: #909399"> 它的故事</i></el-divider>
+          <ul style="list-style: none;">
+            <li>
+              <el-link type="info"
+                href="https://mp.weixin.qq.com/s?__biz=MjM5MDQ4NjUwMg==&mid=2649198220&idx=1&sn=5d0fecf4d3a4ab1469724292dad9797d&chksm=be5734058920bd13ac17f149d7a54dd01b17a066d70f55a813ebb338075b6837f6c6605b255b&token=1351484622&lang=zh_CN#rd"
+                target="_blank">1. 想了解它诞生的故事？</el-link>
+            </li>
+            <li>
+              <el-link type="info"
+                href="https://mp.weixin.qq.com/s?__biz=MjM5MDQ4NjUwMg==&mid=2649198238&idx=1&sn=31d5111d4a3bdc65ab1283612f1427f1&chksm=be5734178920bd0117a068f2c73897fd05c37bddba78efd62ccdf2bb6df5a0386172a4499143&token=677060446&lang=zh_CN#rd"
+                target="_blank">2. 想了解它的实现过程？</el-link>
+            </li>
+          </ul>
+          <div class="qrcode">
+            <img style="width: 50%;" src="http://img.90byte.com/weixin/weixin_qrcode.jpg"></img>
+          </div>
+        </div>
+        <!-- aside：其他 -->
+        <div class="others" style="margin-bottom: 1em;">
+          <el-divider><i class="el-icon-menu" style="color: #909399"> 其他工具</i></el-divider>
+          <el-link type="primary" href="http://md2wechat.90byte.com/index.html" target="_blank">微信公众号 Markdown 编辑器</el-link>
+        </div>
+        
+      </div>
+      <!-- middle -->
+      <!-- <div class="middle" style="margin-top: 1.8em; margin-right: 1%;">
+        <el-link v-show="asideVisable" :underline="false" type="info" @click.native="hideAside"><i
+            class="iconfont icon-zuojiantou-"></i></el-link>
+        <el-link v-show="!asideVisable" :underline="false" type="info" @click.native="showAside"><i
+            class="iconfont icon-youjiantou"></i></el-link>
+      </div> -->
+      <!-- main -->
+      <div v-if="result.length" class="main">
+        <h2 style="color: #606266">《{{ book_title }}》</h2>
+        <div style="color: #606266; font-weight: bold; display: block;">
+          <span>共 {{ result.length }} 条笔记</span>
+          <span v-if="savedCount">，已上传 {{ savedCount }} 条
+            <el-popover placement="top-start" title="" width="250" trigger="hover" content="flomo 每天只支持上传 100 条 Memo">
+              <i style="color: #606266" class="el-icon-question" slot="reference"></i>
+            </el-popover>
+          </span>
+          <span v-if="selectedCount">，已选择 {{ selectedCount }} 条</span>
+          <div class="op" style="display: inline;float: right;line-height: 1.8em;">
+            <el-link v-if="selectedCount > 1" :underline="false" type="primary" @click.native="postsome">批量导入</el-link>
+            <!-- <el-link v-if="selectedCount > 1" :underline="false" type="danger" @click.native="deletesome">批量删除</el-link> -->
+          </div>
+        </div>
+        <div ref="content" class="main-content" :style="{ 'height': height }">
+          <el-card ref="card" shadow="hover" v-for="(item,index) in result" :key="index"
+            @click.native="clickCard(item,index)" :class="{ selected: item.selected, saved: item.saved }">
+            <div class="memo_header" style="margin-bottom: 5px;">
+              <span style="font-size:12px; color:#909399;">{{ item.place }}
+                <div style="float: right;" @click.stop>
+                  <el-dropdown trigger="click" size='small'>
+                    <span class="el-dropdown-link"><i class="el-icon-more el-icon--right"></i></span>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item v-if="!item.saved" icon="el-icon-upload" @click.native.stop="postone(item)">导入
+                        flomo</el-dropdown-item>
+                      <!-- <el-dropdown-item v-if="!item.saved" icon="el-icon-edit-outline" @click.native.stop="edit(item)">编辑</el-dropdown-item> -->
+                      <el-dropdown-item v-if="item.saved" icon="el-icon-copy-document"
+                        @click.native.stop="copyLink(item)">复制链接</el-dropdown-item>
+                      <el-dropdown-item v-if="!item.saved" icon="el-icon-delete" @click.native.stop="del(item,index)"
+                        divided>删除</el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </div>
+              </span>
+            </div>
+            <span v-if="form.order == 'up'" v-for="(item, index) in form.tag.split(' ')" :key="index">
+              <el-tag v-if="item && item.split('')[0] == '#'" style="margin: 0 5px 3px 0">{{ item }}</el-tag>
+            </span>
+            <div class="note" v-if="item.note && item.note.replace(/[\n\r]/g, '')">
+              <p><b>{{ item.note }}</b></p>
+              <!-- <p>{{ form.delimiter }}</p> -->
+            </div>
+            <div class="highlight">
+              <p>{{ item.highlight }}</p>
+            </div>
+            <span v-if="form.order == 'down'" v-for="(item, index) in form.tag.split(' ')" :key="index">
+              <el-tag v-if="item && item.split('')[0] == '#'" style="margin: 3px 5px 0 0">{{ item }}</el-tag>
+            </span>
+          </el-card>
+        </div>
+      </div>
+      <!-- right -->
+      <div class="right">
+        <h2 style="color: #606266">编辑区</h2>
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 10}"
+          placeholder="请输入内容"
+          v-model="textarea2">
+        </el-input>
+      </div>
+    </div>
+    <!-- footer -->
+    <div class="beian">
+        <el-link type="info" href="https://beian.miit.gov.cn/" target="_blank">京ICP备17071687号-2</el-link>
+    </div>
+    <!--  -->
+  </div>
+</body>
+<!-- import Vue before Element -->
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<!-- import JavaScript -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- axios -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<!-- vue-clipboard -->
+<script src="./static/vue-clipboard2.min.js"></script>
+<!-- main.js -->
+<script src="./static/main.js"></script>
+<!-- Baidu tongji -->
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?8840a0f0270afb380dff93d01a63b75b";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</html>
