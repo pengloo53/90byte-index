@@ -104,22 +104,20 @@ let app = new Vue({
                 "place": "位置 4242"
             }
         ],
-        notes_length: 100,
+        notes_length: 9,
         selectedCount: 0,
         savedCount: 0,
         asideVisable: true,
         wereadVisible: false,
         textarea: '',
+        eidtor: '',
         // placeholder: '一个神奇的输入框。\n解析 -> 贴入微信读书笔记并解析；\n新建 -> 插入笔记到列表；\n请求 -> 贴入微信读书 Cookies，获取所有笔记'
         placeholder: '1. 打开微信读书笔记，点击导出，复制到剪贴板\n2. 粘贴到此处\n3. 点击解析按钮'
     },
+    created() {
+        this.listenerFunction()
+    },
     mounted() {
-        this.$nextTick(() => {
-            this.setHeight();
-        })
-        window.onresize = () => {
-            this.setHeight();
-        }
         if (localStorage.getItem('form')) {
             try {
                 form = JSON.parse(localStorage.getItem('form'))
@@ -171,6 +169,27 @@ let app = new Vue({
         }
     },
     methods: {
+        // 事件监听 监听页面的 scroll 事件，回调方法为 handleScroll
+        listenerFunction(e) {
+            document.addEventListener('scroll', this.handleScroll, true)
+        },
+        // 编写滚动条事件
+        handleScroll() {
+            // 获取滚动条元素对象
+            let ele = document.getElementsByClassName('right')[0]
+            // 获取需要固定的元素对象
+            let editorNav = document.getElementsByClassName('el-textarea')[0]
+            // 判断滚动条的高度（大于240，给固定元素添加 class）
+            if (ele.scrollTop > 240) {
+                editorNav.classList.add('fixed_div')
+            } else {
+                editorNav.classList.remove('fixed_div')
+            }
+        },
+        // 销毁事件监听
+        beforeDestroy() {
+            document.removeEventListener('scroll', this.listenerFunction)
+        },
         // 刷新 count
         flashCount() {
             savedCount = 0;
@@ -185,26 +204,6 @@ let app = new Vue({
             })
             this.selectedCount = selectedCount;
             this.savedCount = savedCount;
-        },
-        // 自动计算瀑布流高度
-        setHeight() {
-            var height1 = 0, height2 = 0, height3 = 0;
-            var rows = parseInt(this.result.length / 3) + 1;
-            var rows_space_width = (rows + 1) * this.$refs.content.offsetWidth * 0.02;
-            this.$refs.card.forEach((item, index) => {
-                if (index % 3 == 0) {
-                    height1 = height1 + item.$el.offsetHeight
-                }
-                if (index % 3 == 1) {
-                    height2 = height2 + item.$el.offsetHeight
-                }
-                if (index % 3 == 2) {
-                    height3 = height3 + item.$el.offsetHeight
-                }
-            })
-            var max_height_col = Math.max(height1, height2, height3);
-            height = max_height_col + rows_space_width;
-            this.height = height + 'px'
         },
         saveApi() {
             if (!this.api.startsWith('https://flomoapp.com/')) {
@@ -245,7 +244,7 @@ let app = new Vue({
             this.$message.error('一次只支持上传 10000 个文件');
         },
         handleRequest() {
-            console.log('request')
+            // console.log('request')
             var length = this.fileList.length;
             if (length == 1) {
                 this.parse(this.fileList[0])
@@ -254,7 +253,7 @@ let app = new Vue({
             }
         },
         parse(file) {
-            console.log('parse file: ' + file)
+            // console.log('parse file: ' + file)
             if (file) {
                 let formData = new FormData();
                 formData.append("file", file);
@@ -266,9 +265,6 @@ let app = new Vue({
                         this.form.tag = "#kindle/《" + this.book_title + "》"
                         this.result = response.data.result
                         this.show = true
-                        this.$nextTick(() => {
-                            this.setHeight();
-                        })
                         this.flashCount();
                     })
                     .catch(error => {
@@ -303,7 +299,7 @@ let app = new Vue({
             axios.post(url + '/post', formData, {
                 "Content-Type": "multipart/form-data"
             }).then(response => {
-                console.log(response);
+                // console.log(response);
                 if (response.data.code == 0) {
                     this.$message.success('导入成功')
                     item.saved = true
@@ -364,7 +360,7 @@ let app = new Vue({
             axios.post(url + '/parse_weixin', formData, {
                 "Content-Type": "multipart/form-data"
             }).then(response => {
-                console.log(response);
+                // console.log(response);
                 if (response.data.result.length == 0) {
                     return this.$message.error('输入有误，解析失败')
                 }
@@ -372,9 +368,6 @@ let app = new Vue({
                 this.form.tag = "#kindle/《" + this.book_title.split('：')[0] + "》"
                 this.result = response.data.result
                 this.show = true
-                this.$nextTick(() => {
-                    this.setHeight();
-                })
                 this.flashCount();
             }).catch(error => {
                 console.log(error);

@@ -51,16 +51,16 @@ body {
 }
 
 .aside {
-  max-width: 280px;
+  max-width: 300px;
   margin-right: 1%;
 }
 
 .main {
-  max-width: 900px;
+  max-width: 800px;
 }
 
 .right {
-  min-width: 300px;
+  min-width: 400px;
   margin-left: 1%
 }
 
@@ -110,7 +110,7 @@ body {
 }
 
 .el-upload {
-  width: 280px;
+  width: 300px;
 }
 
 
@@ -132,4 +132,26 @@ body {
   font-size: 0.9em;
   text-align: center;
   margin-bottom: 30px;
+}
+
+h2 {
+  font-family: simsun;
+  margin-bottom: 0;
+  /* line-height: 3em; */
+}
+
+.sub_title {
+  color: #7b7d80;
+  display: block;
+  margin-bottom: 10px;
+  font-size: 0.8em;
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
+.fixed_div {
+  top: 85px;
+  z-index: 99999;
+  position: fixed;
+  /* width: calc(100% - 248px); */
 }
