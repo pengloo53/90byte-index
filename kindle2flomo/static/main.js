@@ -3,7 +3,6 @@ let url = 'http://kindle2flomo.90byte.com'
 let app = new Vue({
     el: '#app',
     data: {
-        height: '1500px',
         width: '',
         fileList: [],
         api: '',
@@ -110,14 +109,23 @@ let app = new Vue({
         asideVisable: true,
         wereadVisible: false,
         textarea: '',
-        eidtor: '',
+        source: 'Your markdown here.',
         // placeholder: '一个神奇的输入框。\n解析 -> 贴入微信读书笔记并解析；\n新建 -> 插入笔记到列表；\n请求 -> 贴入微信读书 Cookies，获取所有笔记'
         placeholder: '1. 打开微信读书笔记，点击导出，复制到剪贴板\n2. 粘贴到此处\n3. 点击解析按钮'
     },
     created() {
-        this.listenerFunction()
+        // this.listenerFunction()
     },
     mounted() {
+        this.editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+            lineNumbers: false,
+            lineWrapping: true,
+            styleActiveLine: true,
+            theme: 'base16-light',
+            mode: 'text/x-markdown',
+            viewportMargin: Infinity,
+            tabSize: 2,
+        });
         if (localStorage.getItem('form')) {
             try {
                 form = JSON.parse(localStorage.getItem('form'))

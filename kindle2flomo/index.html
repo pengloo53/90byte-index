@@ -12,6 +12,9 @@
   <link rel="stylesheet" href="./static/main.css">
   <!-- editor -->
   <link rel="stylesheet" href="./static/editormd/css/editormd.css" />
+  <!-- codemirror -->
+  <link rel="stylesheet" href="./static/codemirror/codemirror.css">
+  <link rel="stylesheet" href="./static/codemirror/theme/base16-light.css">
   <title>Kindle to flomo</title>
 </head>
 
@@ -23,7 +26,7 @@
         <h2 style="color: #606266" title="九零字节出品">Kindle2flomo <small></small></h2>
         <div class="sub_title">将 Kindle 读书笔记一键导入 flomo</div>
         <!-- 第 0 步 -->
-        <el-divider content-position="left">第 0 步：随便点点</el-divider>
+        <!-- <el-divider content-position="left">第 0 步：随便点点</el-divider> -->
         <!-- 第一步 -->
         <el-divider content-position="left">第 1 步：上传笔记</el-divider>
         <!-- kindle note uploader -->
@@ -165,8 +168,11 @@
       <div class="right">
         <h2 style="color: #606266">写作区</h2>
         <div class="sub_title">自由编辑多条笔记，或者写成一篇简短的书评</div>
-        <div id="editor">
-          <textarea style="display:none;">### 关于 Editor.md</textarea>
+        <div class="editor">
+          <textarea style="height: auto" id="editor" type="textarea" v-model="source"></textarea>
+          <div class="editor-tool">
+            <el-button type="primary" size="mini">保存到 flomo</el-button>
+          </div>
         </div>
       </div>
     </div>
@@ -185,25 +191,11 @@
 <script src="./static/axios.min.js"></script>
 <!-- vue-clipboard -->
 <script src="./static/vue-clipboard2.min.js"></script>
+<!-- codemirror -->
+<script src="./static/codemirror/codemirror.js"></script>
+<script src="./static/codemirror/mode/markdown/markdown.js"></script>
 <!-- main.js -->
 <script src="./static/main.js"></script>
-<!-- editor -->
-<script src="./static/jquery.min.js"></script>
-<script src="./static/editormd/editormd.min.js"></script>
-<script type="text/javascript">
-  $(function () {
-    var editor = editormd("editor", {
-      // width  : "100%",
-      // height : "100%",
-      path: "./static/editormd/lib/",
-      autoHeight: true,
-      watch: false,
-      placeholder: "Enjoy Markdown! coding now...",
-      toolbar: false,
-      toolbarAutoFixed     : false,
-    });
-  });
-</script>
 <!-- Baidu tongji -->
 <script>
   var _hmt = _hmt || [];
