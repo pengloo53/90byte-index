@@ -53,17 +53,17 @@
         </div> -->
 
         <!-- 第二步 -->
-        <el-divider content-position="left">第 2 步：设置样式</el-divider>
+        <el-divider content-position="left">第 2 步：设置标签</el-divider>
         <div class="form">
           <el-form :model="form" :rules="rule" ref="form" label-position="top" label-width="100px"
             class="demo-ruleForm">
-            <el-form-item label="标签（支持多个哦）" prop="tag">
+            <el-form-item label="自定义标签（支持多个）" prop="tag">
               <el-input v-model="form.tag" placeholder="开头 # 号，多个标签空格分隔" :clearable="true"></el-input>
             </el-form-item>
             <!-- <el-form-item label="分隔符（标注与笔记之间）" prop="delimiter">
               <el-input v-model="form.delimiter" placeholder="默认空一行" :clearable="true"></el-input>
             </el-form-item> -->
-            <el-form-item label="标签位置（默认下面）" prop="order">
+            <el-form-item label="标签位置" prop="order">
               <el-switch v-model="form.order" :content="form.order" active-value="up" inactive-value="down"
                 change="switchChange"></el-switch>
             </el-form-item>
@@ -71,8 +71,13 @@
         </div>
 
         <!-- 第三步 -->
-        <el-divider content-position="left">第 3 步：设置 API</el-divider>
-        <el-input v-model="api" autocomplete="on" placeholder="https://flomoapp.com/iwh/xxxxxxxxx"></el-input>
+        <el-divider content-position="left">第 3 步：flomo API</el-divider>
+        <el-popover placement="bottom" title="" width="360" trigger="click" @hide="saveApi">
+          <el-input v-model="api" autocomplete="on" placeholder="https://flomoapp.com/iwh/xxxxxxxxx"></el-input>
+          <el-button style="display: block;" slot="reference" icon="el-icon-s-tools" type="danger"
+            size="small">设置 flomo API</el-button>
+        </el-popover>
+        <!-- <el-input v-model="api" autocomplete="on" placeholder="https://flomoapp.com/iwh/xxxxxxxxx"></el-input> -->
         <el-link type="info" href="https://flomoapp.com/mine?source=incoming_webhook" target="_blank"
           style="margin: 10px 0">在哪里找到 flomo API？</el-link>
         <!-- aside: 帮助 -->
@@ -166,12 +171,21 @@
       </div>
       <!-- right -->
       <div class="right">
-        <h2 style="color: #606266">写作区</h2>
-        <div class="sub_title">自由编辑多条笔记，或者写成一篇简短的书评</div>
+        <h2 style="color: #606266">笔记加工区</h2>
+        <div class="sub_title">自由编辑，或整合笔记，或者写书评，或其他</div>
         <div class="editor">
           <textarea style="height: auto" id="editor" type="textarea" v-model="source"></textarea>
           <div class="editor-tool">
-            <el-button type="primary" size="mini">保存到 flomo</el-button>
+            <!-- <el-button type="primary" size="mini">保存到 flomo</el-button> -->
+            <el-dropdown trigger="click" size='small'>
+              <el-button type="primary" size="mini">
+                保存<i class="el-icon-arrow-down el-icon--right"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>导入 flomo</el-dropdown-item>
+                <el-dropdown-item>md2wechat</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
         </div>
       </div>
