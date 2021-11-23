@@ -28,29 +28,25 @@
         <!-- 第 0 步 -->
         <!-- <el-divider content-position="left">第 0 步：随便点点</el-divider> -->
         <!-- 第一步 -->
-        <el-divider content-position="left">第 1 步：上传笔记</el-divider>
+        <el-divider content-position="left">第 1 步</el-divider>
+        <el-dropdown trigger="click" size='small' style="display: block;" placement="bottom-start" @command="get_notes">
+          <el-button type="primary" size="small" icon="el-icon-upload">
+            点击上传读书笔记
+          </el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="kindle">上传 Kindle 读书笔记文件</el-dropdown-item>
+            <el-dropdown-item command="weread">从剪切板读取微信读书笔记</el-dropdown-item>
+            <el-dropdown-item command="dedao" disabled>获取得到读书笔记</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
         <!-- kindle note uploader -->
-        <el-upload class="upload-demo" action="#" :multiple="true" :file-list="fileList" :http-request="handleRequest"
+        <!-- <el-upload class="upload-demo" action="#" :multiple="true" :file-list="fileList" :http-request="handleRequest"
           :on-preview="preview" :on-change="uploadChange" :on-success="uploadSuccess" :on-exceed="exceed" :limit="10000"
           accept=".csv, .html">
-          <el-button icon="el-icon-upload" size="medium" type="primary" style="width: 100%;">点击上传 Kindle 笔记文件
-          </el-button>
-        </el-upload>
-        <el-link type="info"
-          href="https://mp.weixin.qq.com/s?__biz=MjM5MDQ4NjUwMg==&mid=2649198191&idx=1&sn=95c506dde4a079d2840a91b12ca358a8&chksm=be5734e68920bdf04af5ad5f31d8c40acea17e723b1b0eeaa2d3d47d009a0adc5abca44bc953&token=1351484622&lang=zh_CN#rd"
-          target="_blank" style="margin: 10px 0">不知道怎么获取 Kindle 笔记？</el-link>
-        <!-- <el-button icon="el-icon-upload" size="medium" type="success" @click="wereadVisible = true" style="width: 100%; margin-bottom: 10px;">微信读书笔记</el-button> -->
-        <!-- weread input -->
-        <!-- <div v-if="wereadVisible">
-          <el-divider><i class="iconfont icon-weixin" style="color: #909399; font-size: 14px;"> 微信读书</i></el-divider>
-          <el-input type="textarea" :rows="6" :placeholder="placeholder" v-model="textarea">
-          </el-input>
-          <el-button size="medium" icon="el-icon-s-order" type="success" @click="parseWereadNotes"
-            style="margin-top:10px;width: 100%">
-            解析</el-button>
-          <el-button size="mini" icon="el-icon-circle-plus" type="primary">新建</el-button>
-          <el-button size="mini" icon="el-icon-circle-plus" type="warning">请求</el-button>
-        </div> -->
+          <el-button icon="el-icon-upload" size="small" type="primary" style="width: 100%;">点击上传读书笔记</el-button>
+        </el-upload> -->
+        <el-link type="info" href="https://mp.weixin.qq.com/s?__biz=MjM5MDQ4NjUwMg==&mid=2649198191&idx=1&sn=95c506dde4a079d2840a91b12ca358a8&chksm=be5734e68920bdf04af5ad5f31d8c40acea17e723b1b0eeaa2d3d47d009a0adc5abca44bc953&token=1351484622&lang=zh_CN#rd"
+        target="_blank" style="margin: 10px 0">如何获取 Kindle 笔记？</el-link>
 
         <!-- 第二步 -->
         <el-divider content-position="left">第 2 步：设置标签</el-divider>

@@ -236,6 +236,10 @@ let app = new Vue({
                 }
             }
         },
+        // 获取笔记 
+        get_notes(command){
+            console.log(command);
+        },
         preview(file) {
             this.count = 0
             this.parse(file)
