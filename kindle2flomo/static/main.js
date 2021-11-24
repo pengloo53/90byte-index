@@ -9,7 +9,7 @@ let app = new Vue({
         note_prefix: '笔记：',
         highlight_prefix: '标注：',
         form: {
-            tag: '#kindle/《不拘一格》',
+            tag: '#kindle/《不拘一格》 #读书笔记',
             delimiter: '',
             order: 'down'
         },
@@ -19,6 +19,7 @@ let app = new Vue({
             ],
             is_order: false
         },
+        books: [],
         book_title: '示例：不拘一格',
         result: [
             {
@@ -222,7 +223,6 @@ let app = new Vue({
         clickCard(item, index) {
             if (!item.saved) {
                 item.selected = !item.selected
-                // this.result.splice(index, 1, item)
                 if (item.selected) {
                     this.selectedCount++;
                 } else {
@@ -238,24 +238,15 @@ let app = new Vue({
             this.count = 0
             this.parse(file)
         },
-        uploadSuccess(res, file, fileList) {
-            console.log('success')
-            // this.form.file = fileList[0].raw;
-        },
         uploadChange(file, fileList) {
             console.log('change')
             this.fileList.push(file.raw)
         },
-        exceed() {
-            this.$message.error('一次只支持上传 10000 个文件');
-        },
         handleRequest() {
-            // console.log('request')
+            console.log('request')
             var length = this.fileList.length;
             if (length == 1) {
                 this.parse(this.fileList[0])
-            } else {
-                this.$message.warning('点击左侧笔记文件，切换笔记')
             }
         },
         parse(file) {
