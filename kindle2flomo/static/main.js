@@ -142,9 +142,6 @@ let app = new Vue({
         if (localStorage.api) {
             this.api = localStorage.api;
         }
-        if (localStorage.selectedCount) {
-            this.selectedCount = localStorage.selectedCount;
-        }
         if (localStorage.savedCount) {
             this.savedCount = localStorage.savedCount;
         }
@@ -159,9 +156,6 @@ let app = new Vue({
         },
         api(newValue) {
             localStorage.api = newValue;
-        },
-        selectedCount(newValue) {
-            localStorage.selectedCount = newValue;
         },
         savedCount(newValue) {
             localStorage.savedCount = newValue;
@@ -228,7 +222,7 @@ let app = new Vue({
         clickCard(item, index) {
             if (!item.saved) {
                 item.selected = !item.selected
-                this.result.splice(index, 1, item)
+                // this.result.splice(index, 1, item)
                 if (item.selected) {
                     this.selectedCount++;
                 } else {
@@ -286,7 +280,7 @@ let app = new Vue({
                 this.$message.error('请上传Kindle笔记文件');
             }
         },
-        copyLink(item) {
+        copyLink(item, index) {
             this.$copyText(item.url).then((e) => {
                 this.$message.success('复制成功')
             }, (e) => {
@@ -298,7 +292,13 @@ let app = new Vue({
             this.result.splice(index, 1)
             this.flashCount();
         },
-        post(item) {
+        // 编辑
+        edit(item, index) {
+            // this.result.splice(index, 1)
+            // this.flashCount();
+            this.$message.info("还未开发完成")
+        },
+        post(item, index) {
             let formData = new FormData();
             formData.append("api", this.api);
             formData.append("tag", this.form.tag);
@@ -317,6 +317,7 @@ let app = new Vue({
                     item.saved = true
                     item.selected = false
                     item.url = 'https://flomoapp.com/mine/?memo_id=' + response.data.memo.slug
+                    this.result.splice(index, 1, item)
                     this.flashCount();
                 } else {
                     this.$message.error('导入失败：' + response.data.message + '，请检查 Flomo API 设置是否正确');
@@ -325,7 +326,7 @@ let app = new Vue({
                 console.log(error);
             });
         },
-        postone(item) {
+        postone(item, index) {
             // api 校验
             if (!this.api) {
                 return this.$message.error('请设置 Flomo API');
@@ -336,7 +337,7 @@ let app = new Vue({
             if (item.saved) {
                 return this.$message.info('该 MEMO 已经上传至 Flomo')
             }
-            this.post(item);
+            this.post(item, index);
         },
         postsome() {
             // api 校验
@@ -358,11 +359,11 @@ let app = new Vue({
                 return this.$message.error('Flomo API 每天只支持 100 条');
             }
             if (data.length == 0) {
-                return this.$message.error('请点击并选择一条 MEMO 导入')
+                return this.$message.error('请点击并i选择一条 MEMO 导入')
             }
             // 逐条导入 MEMO
             for (var i = 0; i < data.length; i++) {
-                this.post(data[i])
+                this.post(data[i], i)
             }
         },
         // 读取微信读书笔记，并解析
