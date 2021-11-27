@@ -39,6 +39,9 @@ body {
   margin: 0;
 }
 
+h1,h2,h3,h4,h5,h6 {
+  color: #606266
+}
 
 .container {
   display: flex;
@@ -49,6 +52,14 @@ body {
 .aside {
   width: 300px;
   margin-right: 1%;
+}
+
+.books h4 {
+  margin-bottom: 10px;
+}
+
+.book {
+  margin-bottom: 5px;
 }
 
 .main {

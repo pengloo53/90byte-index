@@ -1,10 +1,8 @@
-let url = 'http://kindle2flomo.90byte.com'
-// let url = 'http://127.0.0.1:5000'
+// let url = 'http://kindle2flomo.90byte.com'
+let url = 'http://127.0.0.1:5000'
 let app = new Vue({
     el: '#app',
     data: {
-        width: '',
-        fileList: [],
         api: '',
         note_prefix: '笔记：',
         highlight_prefix: '标注：',
@@ -150,6 +148,10 @@ let app = new Vue({
             result = JSON.parse(localStorage.getItem('result'))
             this.result = result
         }
+        if (localStorage.getItem('books')){
+            books = JSON.parse(localStorage.getItem('books'))
+            this.books = books
+        }
     },
     watch: {
         book_title(newValue) {
@@ -169,6 +171,9 @@ let app = new Vue({
         },
         result(newResult) {
             localStorage.result = JSON.stringify(newResult);
+        },
+        books(newValue){
+            localStorage.books = JSON.stringify(newValue)
         }
     },
     methods: {
@@ -231,26 +236,29 @@ let app = new Vue({
             }
         },
         // 获取笔记 
-        get_notes(command){
-            console.log(command);
-        },
-        preview(file) {
-            this.count = 0
-            this.parse(file)
+        get_notes(filename){
+            if (filename){
+                axios.get(url+'/get/'+filename).then(response => {
+                    this.book_title = response.data.result.book_title.split(' ').join('_')
+                    this.form.tag = "#kindle/《" + this.book_title + "》"
+                    this.result = response.data.result.book_notes
+                    this.flashCount();
+                })
+            }
         },
         uploadChange(file, fileList) {
             console.log('change')
-            this.fileList.push(file.raw)
+            // this.fileList.push(file.raw)
+            this.parse(file.raw)
         },
         handleRequest() {
             console.log('request')
-            var length = this.fileList.length;
-            if (length == 1) {
-                this.parse(this.fileList[0])
-            }
+            // var length = this.fileList.length;
+            // if (length == 1) {
+                // this.parse(this.fileList[0])
+            // }
         },
         parse(file) {
-            // console.log('parse file: ' + file)
             if (file) {
                 let formData = new FormData();
                 formData.append("file", file);
@@ -258,10 +266,15 @@ let app = new Vue({
                     "Content-Type": "multipart/form-data"
                 })
                     .then(response => {
-                        this.book_title = response.data.book_title.split(' ').join('_')
+                        this.book_title = response.data.result.book_title.split(' ').join('_')
                         this.form.tag = "#kindle/《" + this.book_title + "》"
-                        this.result = response.data.result
-                        this.show = true
+                        this.result = response.data.result.book_notes
+
+                        let book = {
+                            filename: response.data.filename,
+                            book_title: this.book_title
+                        }
+                        this.books.push(book)
                         this.flashCount();
                     })
                     .catch(error => {
@@ -370,8 +383,7 @@ let app = new Vue({
                 }
                 this.book_title = response.data.book_title.split(' ').join('_')
                 this.form.tag = "#kindle/《" + this.book_title.split('：')[0] + "》"
-                this.result = response.data.result
-                this.show = true
+                this.result = response.data.resul
                 this.flashCount();
             }).catch(error => {
                 console.log(error);

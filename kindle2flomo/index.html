@@ -23,8 +23,15 @@
     <div class="container">
       <!-- aside -->
       <div v-if="asideVisable" class="aside">
-        <h2 style="color: #606266" title="九零字节出品">Kindle2flomo <small></small></h2>
+        <h2 title="九零字节出品">Kindle2flomo <small></small></h2>
         <div class="sub_title">将 Kindle 读书笔记一键导入 flomo</div>
+        <div class="books" v-if="books.length">
+          <h4>书籍管理</h4>
+          <div v-for="book in books" :key="book" class="book">
+            <el-link @click="get_notes(book.filename)">{{ book.book_title }}</el-link>
+          </div>
+        </div>
+        
         <!-- 第 0 步 -->
         <!-- <el-divider content-position="left">第 0 步：随便点点</el-divider> -->
         <!-- 第一步 -->
@@ -40,9 +47,8 @@
           </el-dropdown-menu>
         </el-dropdown> -->
         <!-- kindle note uploader -->
-        <el-upload class="upload-demo" action="#" :multiple="true" :file-list="fileList" :http-request="handleRequest"
-          :on-preview="preview" :on-change="uploadChange" accept=".csv, .html">
-          <el-button icon="el-icon-upload" size="small" type="primary" style="width: 100%;">点击上传 Kindle 笔记</el-button>
+        <el-upload class="upload-demo" action="#" :multiple="true" :http-request="handleRequest" :show-file-list="false" :on-change="uploadChange" accept=".csv, .html">
+          <el-button icon="el-icon-upload" size="small" type="primary" >点击上传 Kindle 笔记</el-button>
         </el-upload>
         <el-link type="info" href="https://mp.weixin.qq.com/s?__biz=MjM5MDQ4NjUwMg==&mid=2649198191&idx=1&sn=95c506dde4a079d2840a91b12ca358a8&chksm=be5734e68920bdf04af5ad5f31d8c40acea17e723b1b0eeaa2d3d47d009a0adc5abca44bc953&token=1351484622&lang=zh_CN#rd"
         target="_blank" style="margin: 10px 0">如何获取 Kindle 笔记？</el-link>
@@ -111,7 +117,7 @@
       </div> -->
       <!-- main -->
       <div v-if="result.length" class="main">
-        <h2 style="color: #606266">《{{ book_title }}》
+        <h2>《{{ book_title }}》
           <small>共 {{ result.length }} 条笔记</small>
         </h2>
         <div style="margin-left: 1em" class="sub_title">
@@ -122,7 +128,7 @@
           </div>
           <span>，已上传 {{ savedCount }} 条
             <el-popover placement="top-start" title="" width="250" trigger="hover" content="flomo 每天只支持上传 100 条 Memo">
-              <i style="color: #606266" class="el-icon-question" slot="reference"></i>
+              <i class="el-icon-question" slot="reference"></i>
             </el-popover>
           </span>
 
@@ -165,7 +171,7 @@
       </div>
       <!-- right -->
       <div class="right">
-        <h2 style="color: #606266">笔记加工区</h2>
+        <h2>笔记加工区</h2>
         <div class="sub_title">自由编辑，或整合笔记，或者写书评，或其他</div>
         <div class="editor">
           <textarea style="height: auto" id="editor" type="textarea" v-model="source"></textarea>
