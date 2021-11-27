@@ -11,12 +11,6 @@ let app = new Vue({
             delimiter: '',
             order: 'down'
         },
-        rule: {
-            delimiter: [
-                { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
-            ],
-            is_order: false
-        },
         books: [],
         book_title: '示例：不拘一格',
         result: [
@@ -108,7 +102,7 @@ let app = new Vue({
         asideVisable: true,
         wereadVisible: false,
         textarea: '',
-        source: 'Your markdown here.',
+        // source: '',
         // placeholder: '一个神奇的输入框。\n解析 -> 贴入微信读书笔记并解析；\n新建 -> 插入笔记到列表；\n请求 -> 贴入微信读书 Cookies，获取所有笔记'
         placeholder: '1. 打开微信读书笔记，点击导出，复制到剪贴板\n2. 粘贴到此处\n3. 点击解析按钮'
     },
@@ -117,6 +111,7 @@ let app = new Vue({
     },
     mounted() {
         this.editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+            value: 'Markdown here!',
             lineNumbers: false,
             lineWrapping: true,
             styleActiveLine: true,
@@ -198,7 +193,7 @@ let app = new Vue({
         beforeDestroy() {
             document.removeEventListener('scroll', this.listenerFunction)
         },
-        // 刷新 count
+        // 手动刷新 count
         flashCount() {
             savedCount = 0;
             selectedCount = 0;
@@ -301,6 +296,36 @@ let app = new Vue({
             // this.result.splice(index, 1)
             // this.flashCount();
             this.$message.info("还未开发完成")
+        },
+        // 编辑区内容处理
+        handleEditor(command){
+            let content = this.editor.getValue();
+            if(command == 'flomo'){
+                let formData = new FormData();
+                formData.append("api", this.api);
+                formData.append("content", content);
+                axios.post(url + '/post_single', formData, {
+                    "Content-Type": "multipart/form-data"
+                }).then(response => {
+                    if (response.data.code == 0) {
+                        this.$message.success('导入成功')
+                        let item = {}
+                        item.saved = true
+                        item.selected = false
+                        item.place = new Date()
+                        item.note = content
+                        item.url = 'https://flomoapp.com/mine/?memo_id=' + response.data.memo.slug
+                        this.result.unshift(item)
+                        this.flashCount();
+                    } else {
+                        this.$message.error('导入失败：' + response.data.message + '，请检查 Flomo API 设置是否正确');
+                    }
+                }).catch(error => {
+                    console.log(error);
+                });
+            }else if(command == 'md2wechat'){
+                this.$message.info('你想发送：' + content)
+            }
         },
         post(item, index) {
             let formData = new FormData();

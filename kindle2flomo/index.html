@@ -157,11 +157,12 @@
               <el-tag v-if="item && item.split('')[0] == '#'" style="margin: 0 5px 3px 0">{{ item }}</el-tag>
             </span>
             <div class="note" v-if="item.note && item.note.replace(/[\n\r]/g, '')">
-              <p><b>{{ item.note }}</b></p>
+              <!-- <p><b>{{ item.note }}</b></p> -->
+              <b><p v-html="item.note.replaceAll('\n', '<br/>')"></p></b>
               <!-- <p>{{ form.delimiter }}</p> -->
             </div>
-            <div class="highlight">
-              <p>{{ item.highlight }}</p>
+            <div class="highlight" v-if="item.highlight">
+              <p v-html="item.highlight.replaceAll('\n', '<br/>')"></p>
             </div>
             <span v-if="form.order == 'down'" v-for="(item, index) in form.tag.split(' ')" :key="index">
               <el-tag v-if="item && item.split('')[0] == '#'" style="margin: 3px 5px 0 0">{{ item }}</el-tag>
@@ -174,16 +175,16 @@
         <h2>笔记加工区</h2>
         <div class="sub_title">自由编辑，或整合笔记，或者写书评，或其他</div>
         <div class="editor">
-          <textarea style="height: auto" id="editor" type="textarea" v-model="source"></textarea>
+          <textarea style="height: auto" id="editor" type="textarea"></textarea>
           <div class="editor-tool">
             <!-- <el-button type="primary" size="mini">保存到 flomo</el-button> -->
-            <el-dropdown trigger="click" size='small'>
+            <el-dropdown trigger="click" size='small' @command="handleEditor">
               <el-button type="primary" size="mini">
                 保存<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>导入 flomo</el-dropdown-item>
-                <el-dropdown-item>md2wechat</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-upload"command="flomo">导入 flomo</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-s-order" command="md2wechat">MD2Wechat</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
