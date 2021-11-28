@@ -25,12 +25,12 @@
       <div v-if="asideVisable" class="aside">
         <h2 title="九零字节出品">Kindle2flomo <small></small></h2>
         <div class="sub_title">将 Kindle 读书笔记一键导入 flomo</div>
-        <div class="books" v-if="books.length">
+        <!-- <div class="books" v-if="books.length">
           <h4>书籍管理</h4>
           <div v-for="book in books" :key="book" class="book">
             <el-link @click="get_notes(book.filename)">{{ book.book_title }}</el-link>
           </div>
-        </div>
+        </div> -->
         
         <!-- 第 0 步 -->
         <!-- <el-divider content-position="left">第 0 步：随便点点</el-divider> -->
