@@ -25,12 +25,14 @@
       <div v-if="asideVisable" class="aside">
         <h2 title="九零字节出品">Kindle2flomo <small></small></h2>
         <div class="sub_title">将 Kindle 读书笔记一键导入 flomo</div>
-        <!-- <div class="books" v-if="books.length">
+
+        <!-- books manage -->
+        <div class="books" v-if="books.length">
           <h4>书籍管理</h4>
-          <div v-for="book in books" :key="book" class="book">
-            <el-link @click="get_notes(book.filename)">{{ book.book_title }}</el-link>
+          <div v-for="(book,index) in books" :key="index" :class="current_book == index?'book current':'book'" @click="get_notes(book.filename, index)">
+            {{ book.book_title }}
           </div>
-        </div> -->
+        </div>
         
         <!-- 第 0 步 -->
         <!-- <el-divider content-position="left">第 0 步：随便点点</el-divider> -->
@@ -54,9 +56,9 @@
         target="_blank" style="margin: 10px 0">如何获取 Kindle 笔记？</el-link>
 
         <!-- 第二步 -->
-        <el-divider content-position="left">第 2 步：设置标签</el-divider>
+        <el-divider content-position="left">第 2 步</el-divider>
         <div class="form">
-          <el-form :model="form" :rules="rule" ref="form" label-position="top" label-width="100px"
+          <el-form :model="form" ref="form" label-position="top" label-width="100px"
             class="demo-ruleForm">
             <el-form-item label="自定义标签（支持多个）" prop="tag">
               <el-input v-model="form.tag" placeholder="开头 # 号，多个标签空格分隔" :clearable="true"></el-input>
@@ -72,7 +74,7 @@
         </div>
 
         <!-- 第三步 -->
-        <el-divider content-position="left">第 3 步：flomo API</el-divider>
+        <el-divider content-position="left">第 3 步</el-divider>
         <el-popover placement="bottom" title="" width="360" trigger="click" @hide="saveApi">
           <el-input v-model="api" autocomplete="on" placeholder="https://flomoapp.com/iwh/xxxxxxxxx"></el-input>
           <el-button style="display: block;" slot="reference" icon="el-icon-s-tools" type="danger"

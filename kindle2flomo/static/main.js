@@ -3,15 +3,17 @@ let url = 'http://127.0.0.1:5000'
 let app = new Vue({
     el: '#app',
     data: {
+        fileList: [],
         api: '',
         note_prefix: '笔记：',
-        highlight_prefix: '标注：',
+        highlight_prefix: '',
+        delimiter: '---------',
         form: {
             tag: '#kindle/《不拘一格》 #读书笔记',
-            delimiter: '',
             order: 'down'
         },
         books: [],
+        current_book: -1,
         book_title: '示例：不拘一格',
         result: [
             {
@@ -107,7 +109,7 @@ let app = new Vue({
         placeholder: '1. 打开微信读书笔记，点击导出，复制到剪贴板\n2. 粘贴到此处\n3. 点击解析按钮'
     },
     created() {
-        // this.listenerFunction()
+
     },
     mounted() {
         this.editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
@@ -133,11 +135,17 @@ let app = new Vue({
         if (localStorage.book_title) {
             this.book_title = localStorage.book_title;
         }
+        if (localStorage.current_book){
+            this.current_book = localStorage.current_book;
+        }
         if (localStorage.api) {
             this.api = localStorage.api;
         }
         if (localStorage.savedCount) {
             this.savedCount = localStorage.savedCount;
+        }
+        if (localStorage.selectedCount) {
+            this.selectedCount = localStorage.selectedCount;
         }
         if (localStorage.getItem('result')) {
             result = JSON.parse(localStorage.getItem('result'))
@@ -152,11 +160,17 @@ let app = new Vue({
         book_title(newValue) {
             localStorage.book_title = newValue;
         },
+        current_book(newValue){
+            localStorage.current_book = newValue;
+        },
         api(newValue) {
             localStorage.api = newValue;
         },
         savedCount(newValue) {
             localStorage.savedCount = newValue;
+        },
+        selectedCount(newValue) {
+            localStorage.selectedCount = newValue;
         },
         form: {
             handler(newForm, oldForm) {
@@ -229,9 +243,11 @@ let app = new Vue({
                     this.selectedCount--;
                 }
             }
+            this.result.splice(index, 1, item)
         },
         // 获取笔记 
-        get_notes(filename){
+        get_notes(filename,index){
+            this.current_book = index;
             if (filename){
                 axios.get(url+'/get/'+filename).then(response => {
                     this.book_title = response.data.result.book_title.split(' ').join('_')
@@ -250,7 +266,7 @@ let app = new Vue({
             console.log('request')
             // var length = this.fileList.length;
             // if (length == 1) {
-                // this.parse(this.fileList[0])
+            //     this.parse(this.fileList[0])
             // }
         },
         parse(file) {
@@ -264,12 +280,12 @@ let app = new Vue({
                         this.book_title = response.data.result.book_title.split(' ').join('_')
                         this.form.tag = "#kindle/《" + this.book_title + "》"
                         this.result = response.data.result.book_notes
-
                         let book = {
                             filename: response.data.filename,
                             book_title: this.book_title
                         }
                         this.books.push(book)
+                        this.current_book = this.books.length -1;
                         this.flashCount();
                     })
                     .catch(error => {
@@ -331,7 +347,7 @@ let app = new Vue({
             let formData = new FormData();
             formData.append("api", this.api);
             formData.append("tag", this.form.tag);
-            formData.append("delimiter", this.form.delimiter);
+            formData.append("delimiter", this.delimiter);
             formData.append("order", this.form.order);
             formData.append("note_prefix", this.note_prefix);
             formData.append("highlight_prefix", this.highlight_prefix);
