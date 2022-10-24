@@ -1,0 +1,163 @@
+input,textarea,img,video,object { box-sizing: border-box;}
+a { text-decoration: none; color: #ff3502; font-size: 0.9em; }
+input, button, textarea { font-family: inherit; }
+h1, h2, h3, h4, h5, h6 { font-weight: normal; }
+em { font-style: normal !important; }
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'PingFang SC', BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+}
+#app{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.header {
+  height: 40px;
+  padding: 10px 2%;
+  display: flex;
+  align-items: center;
+}
+.header .logo {
+  margin-right: 20px;
+}
+.header .hint {
+  opacity: 0.6;
+  margin: 20px 0;
+  margin-right: 20px;
+}
+.header .ctrl {
+  flex-basis: 60px;
+  display: flex;
+  flex: 1;
+  align-items: center;
+}
+.main-body{
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  flex: 1;
+  flex-basis: auto;
+  overflow: auto;
+  -webkit-box-flex: 1;
+  margin: 0 2%;
+  height: 100%;
+}
+.editor-wrapper{
+  width: 61.8%;
+  height: 100%;
+  border: none;
+  margin-right: 5px;
+}
+.preview-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 38.2%;
+  height: 100%;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+  align-items: center;
+  overflow: auto;
+}
+.preview {
+  margin: 30px 0;
+  width: 375px;
+  padding: 20px;
+  font-size: 17px;
+  color: #333;
+  outline: none;
+  box-shadow: 0 0 60px rgba(0,0,0,0.1);
+}
+/* .preview p{
+  margin: 0 0 1.2em 0;
+}
+.preview ul, .preview ol {
+  padding-left: 40px !important;
+  font-size: 14px;
+} */
+/* .preview blockquote {
+  color: #9a9a9a !important;
+  padding-left: 15px;
+  padding-top: 0.05px;
+  background-color: #fefefe !important;
+  border-left: 3px solid #dbdbdb;
+  font-size: 0.9em !important;
+  margin: 1em 0
+} */
+.CodeMirror {
+  height: 100%;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+  font-size: 17px;
+  padding: 20px;
+  width: 100%;
+  font-family: 'PingFang SC', BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+  box-sizing: border-box;
+}
+/* ele ui */
+.el-form-item {
+  margin-bottom: 0px !important;
+}
+.el-message__icon { display: none }
+/*wechat code block*/
+.rich_media_content .code-snippet *, .rich_media_content .code-snippet__fix * {
+  max-width: 1000% !important;
+}
+.code-snippet__js {
+  border: none
+}
+.code-snippet__fix {
+  word-wrap: break-word !important;
+  font-size: 0.8em;
+  margin: 10px 0;
+  display: block;
+  color: #333;
+  position: relative;
+  background-color: rgba(0,0,0,0.03);
+  /* border: 1px solid #f0f0f0; */
+  border-radius: 2px;
+  display: flex;
+  line-height: 26px;
+}
+.code-snippet__fix .code-snippet__line-index {
+  counter-reset: line;
+  flex-shrink: 0;
+  height: 100%;
+  padding: 1em;
+  list-style-type: none;
+}
+.code-snippet__fix .code-snippet__line-index li {
+  list-style-type: none;
+  text-align: right;
+}
+.code-snippet__fix .code-snippet__line-index li::before {
+  min-width: 1.5em;
+  text-align: right;
+  font-size: 0.8em;
+  left: -2.5em;
+  counter-increment: line;
+  content: counter(line);
+  display: inline;
+  color: rgba(0,0,0,0.15);
+}
+.code-snippet__fix pre {
+  overflow-x: auto;
+  padding: 1em;
+  padding-left: 1em;
+  padding-left: 0;
+  white-space: normal;
+  flex: 1;
+  -webkit-overflow-scrolling: touch;
+}
+.code-snippet__fix code {
+  text-align: left;
+  font-size: 0.8em;
+  display: block;
+  white-space: pre;
+  display: flex;
+  position: relative;
+  font-family: Consolas,"Liberation Mono",Menlo,Courier,monospace;
+}

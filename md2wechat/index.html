@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>公众号原生样式 Markdown 编辑器</title>
+  <link rel="shortcut icon" href="favicon.png">
+  <link rel="apple-touch-icon-precomposed" href="favicon.png">
+  <!-- element ui -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <!-- codemirror -->
+  <link rel="stylesheet" href="assets/codemirror/codemirror.css">
+  <link rel="stylesheet" href="assets/codemirror/theme/base16-light.css">
+  <link rel="stylesheet" href="assets/codemirror/theme/duotone-light.css">
+  <link rel="stylesheet" href="assets/codemirror/theme/monokai.css">
+  <!-- app -->
+  <link rel="stylesheet" href="assets/css/app.css">
+  <style>
+    @media screen and (max-width: 500px) {}
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="header">
+      <h3 class="logo">{{ title }}</h3>
+      <el-form size="small" class="ctrl" :inline=true>
+        <el-form-item label="编辑样式">
+          <el-select v-model="currentEditorTheme" size="small" @change="editorThemeChanged">
+            <el-option v-for="editorTheme in editorThemes" :key="editorTheme.value" :label="editorTheme.label"
+              :value="editorTheme.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <!-- <el-form-item label="字号">
+            <el-select v-model="currentSize" size="mini" placeholder="字体大小" @change="sizeChanged">
+              <el-option v-for="size in sizeOption" :key="size.value" :label="size.label" :value="size.value">
+                <span style="float: left">{{ size.label }}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">{{ size.desc }}</span>
+              </el-option>
+            </el-select>
+          </el-form-item> -->
+        <el-form-item label="渲染样式">
+          <el-select v-model="currentTheme" size="small" placeholder="选择主题样式" @change="themeChanged">
+            <el-option v-for="theme in themeOption" :key="theme.value" :label="theme.label" :value="theme.value">
+              <span style="float: left">{{ theme.label }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ theme.author }}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div class="hint"><a href="#" @click="copy" class="copy-button">点此复制全文</a></div>
+      <el-dropdown trigger="click">
+        <el-button size="small" type="primary" icon="el-icon-present">关注我</el-button>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>
+            <el-image style="width: 200px" src="http://img.90byte.com/weixin/weixin_qrcode.jpg" fit="contain"
+              placement="bottom-right"></el-image>
+          </el-dropdown-item>
+          <!-- <el-dropdown-item icon="el-icon-circle-plus">狮子头</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-circle-plus-outline">螺蛳粉</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-check">双皮奶</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-circle-check">蚵仔煎</el-dropdown-item> -->
+        </el-dropdown-menu>
+      </el-dropdown>
+    </div>
+    <div class="main-body">
+      <div class="editor-wrapper">
+        <textarea id="editor" type="textarea" placeholder="Your markdown here." v-model="source"></textarea>
+      </div>
+      <div class="preview-wrapper">
+        <div class="preview" contenteditable="false">
+          <div id="output" v-html="output"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <!-- axios -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <!-- marked -->
+  <script src="assets/scripts/3rd/marked.min.js"></script>
+  <!-- codemirror -->
+  <script src="assets/codemirror/codemirror.js"></script>
+  <script src="assets/codemirror/mode/markdown/markdown.js"></script>
+  <!-- 注音功能 -->
+  <script src="assets/scripts/3rd/FuriganaMD.js"></script>
+  <!-- themes -->
+  <script src="themes/default.js"></script>
+  <script src="themes/lupeng.js"></script>
+  <script src="themes/lupeng_new.js"></script>
+  <!-- app -->
+  <script src="assets/scripts/wx-renderer.js"></script>
+  <script src="assets/scripts/upload.js"></script>
+  <!-- Google Analytics -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-4178606-10"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'UA-4178606-10');
+  </script> -->
+  <script>
+    // var api = 'http://localhost:5000'
+    var api = 'http://md2wechat.90byte.com'
+    var app = new Vue({
+      el: '#app',
+      data: function () {
+        return {
+          title: 'Markdown to Wechat',
+          aboutOutput: '',
+          output: '',
+          source: '',
+          editorThemes: [
+            { label: 'base16-light', value: 'base16-light' },
+            { label: 'duotone-light', value: 'duotone-light' },
+            { label: 'monokai', value: 'monokai' }
+          ],
+          currentEditorTheme: 'base16-light',
+          editor: null,
+          currentTheme: 'lupeng',
+          themeOption: [
+            { label: '原作者', value: 'default', author: 'Lyric' },
+            { label: '优雅风格', value: 'lupeng', author: 'lupeng' },
+            { label: '原生风格', value: 'lupeng_new', author: 'lupeng' }
+          ],
+          styleThemes: {
+            default: defaultTheme,
+            lupeng: lupengTheme,
+            lupeng_new: lupeng_new
+          }
+        }
+      },
+      mounted() {
+        var self = this
+        this.editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+          lineNumbers: false,
+          lineWrapping: true,
+          styleActiveLine: true,
+          theme: this.currentEditorTheme,
+          mode: 'text/x-markdown',
+        });
+        this.editor.on("change", function (cm, change) {
+          self.refresh()
+        })
+        this.wxRenderer = new WxRenderer({
+          theme: this.styleThemes.lupeng
+        })
+        axios({
+          method: 'get',
+          url: api + '/getMarkdown?filename=default.md',
+        }).then(function (resp) {
+          self.editor.setValue(resp.data)
+        })
+      },
+      methods: {
+        renderWeChat: function (source) {
+          var output = marked(source, { renderer: this.wxRenderer.getRenderer() })
+          if (this.wxRenderer.hasFootnotes()) {
+            output += this.wxRenderer.buildFootnotes()
+          }
+          return output
+        },
+        editorThemeChanged: function (editorTheme) {
+          this.editor.setOption('theme', editorTheme)
+        },
+        themeChanged: function (themeName) {
+          var themeName = themeName;
+          var themeObject = this.styleThemes[themeName];
+          this.wxRenderer.setOptions({
+            theme: themeObject
+          })
+          this.refresh()
+        },
+        refresh: function () {
+          this.output = this.renderWeChat(this.editor.getValue())
+        },
+        copy: function () {
+          var clipboardDiv = document.getElementById('output')
+          clipboardDiv.focus();
+          window.getSelection().removeAllRanges();
+          var range = document.createRange();
+          range.setStartBefore(clipboardDiv.firstChild);
+          range.setEndAfter(clipboardDiv.lastChild);
+          window.getSelection().addRange(range);
+
+          try {
+            if (document.execCommand('copy')) {
+              this.$message({
+                message: '已复制到剪贴板', type: 'success'
+              })
+            } else {
+              this.$message({
+                message: '未能复制到剪贴板，请全选后右键复制', type: 'warning'
+              })
+            }
+          } catch (err) {
+            this.$message({
+              message: '未能复制到剪贴板，请全选后右键复制', type: 'warning'
+            })
+          }
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
