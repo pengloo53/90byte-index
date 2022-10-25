@@ -6,17 +6,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>公众号原生样式 Markdown 编辑器</title>
-  <link rel="shortcut icon" href="favicon.png">
-  <link rel="apple-touch-icon-precomposed" href="favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+  <link rel="manifest" href="/assets/favicon/site.webmanifest">
+  <link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
   <!-- element ui -->
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="/assets/3rd/element/element-ui_lib_theme-chalk_index.css">
   <!-- codemirror -->
-  <link rel="stylesheet" href="assets/codemirror/codemirror.css">
-  <link rel="stylesheet" href="assets/codemirror/theme/base16-light.css">
-  <link rel="stylesheet" href="assets/codemirror/theme/duotone-light.css">
-  <link rel="stylesheet" href="assets/codemirror/theme/monokai.css">
+  <link rel="stylesheet" href="/assets/3rd/codemirror/codemirror.css">
+  <link rel="stylesheet" href="/assets/3rd/codemirror/theme/base16-light.css">
+  <link rel="stylesheet" href="/assets/3rd/codemirror/theme/duotone-light.css">
+  <link rel="stylesheet" href="/assets/3rd/codemirror/theme/monokai.css">
   <!-- app -->
-  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="static/app.css">
   <style>
     @media screen and (max-width: 500px) {}
   </style>
@@ -56,7 +61,7 @@
         <el-button size="small" type="primary" icon="el-icon-present">关注我</el-button>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
-            <el-image style="width: 200px" src="http://img.90byte.com/weixin/weixin_qrcode.jpg" fit="contain"
+            <el-image style="width: 200px" src="/assets/images/qrcode*12.jpg" fit="contain"
               placement="bottom-right"></el-image>
           </el-dropdown-item>
           <!-- <el-dropdown-item icon="el-icon-circle-plus">狮子头</el-dropdown-item>
@@ -79,25 +84,25 @@
   </div>
 
   <!-- import Vue before Element -->
-  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="/assets/3rd/vue/vue@2.6.14.js"></script>
   <!-- import JavaScript -->
-  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="/assets/3rd/element/element-ui_lib_index.js"></script>
   <!-- axios -->
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="/assets/3rd/axios/axios.min.js"></script>
   <!-- marked -->
-  <script src="assets/scripts/3rd/marked.min.js"></script>
+  <script src="/assets/3rd/marked/marked.min.js"></script>
   <!-- codemirror -->
-  <script src="assets/codemirror/codemirror.js"></script>
-  <script src="assets/codemirror/mode/markdown/markdown.js"></script>
+  <script src="/assets/3rd/codemirror/codemirror.js"></script>
+  <script src="/assets/3rd/codemirror/mode/markdown/markdown.js"></script>
   <!-- 注音功能 -->
-  <script src="assets/scripts/3rd/FuriganaMD.js"></script>
+  <script src="/assets/3rd/furiganaMD/FuriganaMD.js"></script>
   <!-- themes -->
   <script src="themes/default.js"></script>
   <script src="themes/lupeng.js"></script>
   <script src="themes/lupeng_new.js"></script>
   <!-- app -->
-  <script src="assets/scripts/wx-renderer.js"></script>
-  <script src="assets/scripts/upload.js"></script>
+  <script src="static/wx-renderer.js"></script>
+  <script src="static/upload.js"></script>
   <!-- Google Analytics -->
   <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-4178606-10"></script>
   <script>
@@ -107,8 +112,6 @@
     gtag('config', 'UA-4178606-10');
   </script> -->
   <script>
-    // var api = 'http://localhost:5000'
-    var api = 'http://md2wechat.90byte.com'
     var app = new Vue({
       el: '#app',
       data: function () {
@@ -154,7 +157,7 @@
         })
         axios({
           method: 'get',
-          url: api + '/getMarkdown?filename=default.md',
+          url: 'markdown/default.md',
         }).then(function (resp) {
           self.editor.setValue(resp.data)
         })
