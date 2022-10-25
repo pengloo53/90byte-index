@@ -42,7 +42,7 @@
 
 请赞赏我。
 
-![](http://img.90byte.com/weixin/qr-appreciate.png)
+![](/assets/images/qr.png)
 
 ### 列表
 
